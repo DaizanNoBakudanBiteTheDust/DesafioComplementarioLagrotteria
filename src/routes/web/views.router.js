@@ -20,7 +20,7 @@ router.get('/realTimeProducts', async (req, res) => {
 });
 
 router.get('/realTimeCarts', async (req, res) => { 
-    res.render('realTimeCarts', { products: await cartManager.getAll() });
+    res.render('realTimeCarts', { carts: await cartManager.getAll() });
 });
 
 

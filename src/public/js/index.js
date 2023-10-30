@@ -70,7 +70,7 @@ socket.on('showCarts', data => {
     data.forEach(cart => {
         container.innerHTML += `
             <ul>
-                <li>products: [${cart.products.join(', ')}]</li> 
+                <li>products: [${cart.products}]</li> 
                 <li>id: ${cart._id}</li>
             </ul>
         `

@@ -31,10 +31,39 @@ router.get('/:cid', async (req, res) => {
 
          //carrito por ID
 
-         const cart = await manager.getProductById(cartId);
+         const cart = await manager.getProductById(cid);
      
        res.send(cart);
 });
+
+//postea carrito
+
+router.post('/', async (req, res) => {
+        const carts = await manager.getAll();
+        // Productos que haremos con Postman
+        const cart = req.body;
+
+        // Obtener un array con todos los "id" existentes 
+        const existingIds = carts.map(p => p._id);
+
+        if (!cart.products) {
+                // Error del cliente
+                return res.status(400).send({
+                        status: 'error',
+                        error: 'incomplete values'
+                });
+        }
+
+        await manager.save(cart);
+
+        // status success
+        return res.send({
+                status: 'success',
+                message: 'product created',
+                cart
+        })
+});
+
 
 
 // postea los productos
@@ -42,11 +71,9 @@ router.get('/:cid', async (req, res) => {
 
 router.post('/:cid/products/:pid', async (req, res) => {
 
-        const carts = await manager.getAll();
-
         // utilizo params de carrito y producto
         const {cid} = req.params;
-        const {pid}= req.params
+        const pid = parseInt(req.params.pid); // Convierte pid a número
 
         //carrito por ID
 
@@ -58,41 +85,39 @@ router.post('/:cid/products/:pid', async (req, res) => {
                 });
         }
 
-        // verifica si el carro esta vacio
+        // Verifica si el carro está vacío
+    if (!cart.products || cart.products.length === 0) {
+        cart.products = []; // Inicializa cart.products como un arreglo vacío
+    }
 
-        if (!cart.products || cart.products.length === 0) {
-                console.log("carro vacio");
-        }
+    const lastProductId = cart.products.length > 0 ? cart.products[cart.products.length - 1].id : 0;
+    const newProductId = lastProductId + 1;
 
-        const existingProduct = cart.products.find(product => product.id === productId);
+    const existingProduct = cart.products.find(product => product.id === pid);
 
         if (existingProduct) {
                 // Si el producto ya existe, incrementa la cantidad
-                existingProduct.quantity += 1;
+               existingProduct.quantity += 1;
         } else {
-                // Si el producto no existe, obtén el último ID de producto
-                const lastProductId = cart.products.length > 0 ? cart.products[cart.products.length - 1].id : 0;
 
-                // Incrementa el último ID en 1 para obtener el nuevo ID único
-                const newProductId = lastProductId + 1;
+        // Crea el objeto del producto con el nuevo ID y cantidad inicial de 1
+        const addedProduct = {
+                id: newProductId, // Establece el ID del producto
+                quantity: 1
+            };
 
-                // Crea el objeto del producto con el nuevo ID y cantidad inicial de 1
-                const addedProduct = {
-                        id: newProductId,
-                        quantity: 1
-                };
-
-                // Agrega el producto al arreglo "products" del carrito
-                cart.products.push(addedProduct);
-        }
+        // Agrega el producto al arreglo "products" del carrito
+        cart.products.push(addedProduct);
+        
+         }
 
         // Actualiza el carrito con los cambios
-        await manager.updateProduct(cartId, cart);
+        await manager.update(cid, cart);
 
-        await manager.addProducts(cart);
+        await manager.save(cart);
 
         // status success
-        return res.send({
+        return res.json({
                 status: 'success',
                 message: 'product added',
                 cart

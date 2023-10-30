@@ -21,23 +21,20 @@ export default class Carts {
         return result;
     }
 
-    update = async (id, cart) => {
+    delete = async (id, cart) => {
         const result = await cartsModel.deleteOne({_id : id}, cart);
         return result;
     }
 
-    getProductById = async (idProduct) => {
+    getProductById = async (id) => {
 
-        const products = await cartsModel.find().lean();
+        const product = await cartsModel.findOne({ _id: id}).lean();
+        
+        if (!product) {
+            throw new Error('Producto no encontrado');
 
-        const indexProduct = products.findIndex(product => product._id === idProduct);
-
-        if (indexProduct === -1) {
-            return console.log('Producto no encontrado');
-
-        } else {
-            return products[indexProduct]
-        }
+        } 
+        return product;
 
 
     }
