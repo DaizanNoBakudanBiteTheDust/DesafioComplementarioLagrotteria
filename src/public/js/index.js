@@ -3,7 +3,7 @@ const socket = io();
 
 let user;
 let chatBox = document.getElementById('chatBox');
-let message = document.getElementById('messagelogs')
+let messagesLog = document.getElementById('messageLog');
 
 Swal.fire({
     title: 'Identifícate',
@@ -23,13 +23,14 @@ Swal.fire({
     }
 });
 
-chatBox.addEventListener('keyup', evt =>{
+chatBox.addEventListener('keyup', evt => {
     if(evt.key === 'Enter'){
-        if(chatBox.value.trim().length > 0){
-            socket.emit('message', { user, message: chatBox.value});
-            chatBox.value='';
-        }
-    }
+        if (chatBox.value.trim().length > 0) {
+            socket.emit('message', { user, message: chatBox.value });
+            chatBox.value = '';
+    }}
+
+    
 })
 
 //AGREGAR
@@ -112,9 +113,16 @@ socket.on('showChats', data => {
     let messages = '';
 
     data.forEach(message => {
-        messages += `${message.user} dice: ${message.message}`
+        messages += `<div id="messageLog">
+            <ul>
+                ${message.user} dice: ${message.message}
+            </ul>
+        </div>`;
     });
-    messagesLog.innerHTML = messages; 
+
+    // Agrega los nuevos mensajes al área de chat
+    messagesLog.innerHTML = messages;
+    
 
 })
 

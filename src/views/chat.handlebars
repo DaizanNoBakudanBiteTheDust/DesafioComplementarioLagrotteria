@@ -8,11 +8,14 @@
     <h1 id="ola">Chat</h1>
     <div id="container">
       <div>
+        
     {{#each chat}}
+    <div id="messageLog">
     <ul>
         {{this.user}} 
-        <li>message: {{this.message}}</li>
+        <li>dijo: {{this.message}}</li>
     </ul>
+    </div>
     {{/each}}
     </div>
     </div>

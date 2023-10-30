@@ -9,7 +9,7 @@ const router = Router();
 //read
 
 router.get('/', async (req, res) => {
-    res.render('home', {  messages: await  manager.getAll() });
+    res.render('chat', {  messages: await  manager.getAll() });
 });
 
 router.post('/', async (req, res) => {
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
             message
         });
 
-        io.emit('showChats', result);
+        io.emit('showChats', message);
 
         res.status(201).send({ status: 'success', payload: result });
     } catch (error) {
