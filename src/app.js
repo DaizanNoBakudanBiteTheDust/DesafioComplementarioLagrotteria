@@ -15,12 +15,14 @@ import viewsRouter from './routes/web/views.router.js';
 //para el socket
 
 import Products from './dao/dbManagers/products.manager.js';
+import Carts from './dao/dbManagers/cart.manager.js';
 
 // import ProductManager from './dao/fileManagers/productManager.js';
 
 
 // const manager = new ProductManager(productsFilePath);
   const prodManager = new Products();
+  const cartManager = new Carts();
 
 
 // Crea server express
@@ -77,14 +79,20 @@ io.on('connection', socket => {
                 await prodManager.save(data);
                 io.emit('showProducts', await prodManager.getAll());
         });
-/*
-        //elimino via form que me pasa el cliente
-        socket.on('eliminarProducto', async (data) => {
 
-                const id = Number(data)
-                await prodManager.delete(id);
+         //elimino via form que me pasa el cliente
+         socket.on('eliminarProducto', async (data) => {
+
+                const _id = data
+                await prodManager.delete(_id);
                 io.emit('showProducts', await prodManager.getAll());
 
         });
-*/
+
+        socket.on('agregarCarro', async data => {
+                await cartManager.save(data); // Usar cartManager para guardar un carrito
+                io.emit('showCarts', await cartManager.getAll());
+            });
+
+
 });
