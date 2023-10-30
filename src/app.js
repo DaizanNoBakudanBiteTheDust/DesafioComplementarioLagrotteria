@@ -10,12 +10,14 @@ import {
 } from 'socket.io';
 import productRouter from './routes/api/products.router.js';
 import cartRouter from './routes/api/cart.router.js';
+import chatRouter from './routes/api/message.router.js';
 import viewsRouter from './routes/web/views.router.js';
 
 //para el socket
 
 import Products from './dao/dbManagers/products.manager.js';
 import Carts from './dao/dbManagers/cart.manager.js';
+import Messages from './dao/dbManagers/message.manager.js';
 
 // import ProductManager from './dao/fileManagers/productManager.js';
 
@@ -23,6 +25,8 @@ import Carts from './dao/dbManagers/cart.manager.js';
 // const manager = new ProductManager(productsFilePath);
   const prodManager = new Products();
   const cartManager = new Carts();
+  const chatManager = new Messages();
+
 
 
 // Crea server express
@@ -63,6 +67,9 @@ app.use('/api/products', productRouter);
 // Ruta carts
 app.use('/api/carts', cartRouter);
 
+// Ruta chat
+app.use('/api/chat', chatRouter);
+
 const server = app.listen(8080, () => console.log('listening en 8080'));
 
 // IO
@@ -93,6 +100,11 @@ io.on('connection', socket => {
                 await cartManager.save(data); // Usar cartManager para guardar un carrito
                 io.emit('showCarts', await cartManager.getAll());
             });
+
+        socket.on('agregarMessage', async data => {
+                await prodManager.save(data);
+                io.emit('showMessage', await chatManager.getAll());
+        });    
 
 
 });
