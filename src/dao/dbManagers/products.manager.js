@@ -20,11 +20,9 @@ export default class Products {
         });
 
         if (existingProduct) {
-            return res.status(409).send({
-                status: 'error',
-                error: 'El producto con este código ya existe.'
-            });
-        }
+           console.log("producto existe con ese codigo");
+            };
+        
         // se agrega el producto
 
         const result = await productsModel.create(product);

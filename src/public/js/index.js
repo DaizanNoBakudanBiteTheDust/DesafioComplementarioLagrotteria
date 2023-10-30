@@ -58,7 +58,7 @@ socket.on('showProducts', data => {
                 <li>thumbnail: ${product.status}</li>
                 <li>stock: ${product.stock}</li>
                 <li>category: ${product.category}</li>
-                <li>id: ${product.id}</li>
+                <li>id: ${product._id}</li>
             </ul>
         `
     })

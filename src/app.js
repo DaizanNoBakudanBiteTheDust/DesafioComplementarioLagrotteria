@@ -74,7 +74,7 @@ io.on('connection', socket => {
 
         //agrego producto via form
         socket.on('agregarProducto', async data => {
-                prodManager.save(data);
+                await prodManager.save(data);
                 io.emit('showProducts', await prodManager.getAll());
         });
 /*
