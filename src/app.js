@@ -98,7 +98,7 @@ io.on('connection', socket => {
         });
 
         socket.on('agregarCarro', async data => {
-                await cartManager.save(data); // Usar cartManager para guardar un carrito
+                await cartManager.save(data); 
                 io.emit('showCarts', await cartManager.getAll());
             });
 

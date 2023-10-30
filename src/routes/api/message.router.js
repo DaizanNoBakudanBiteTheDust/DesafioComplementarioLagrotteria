@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
             message
         });
 
-        io.emit('showChats', message);
+        io.emit('showChats', await  manager.getAll());
 
         res.status(201).send({ status: 'success', payload: result });
     } catch (error) {
