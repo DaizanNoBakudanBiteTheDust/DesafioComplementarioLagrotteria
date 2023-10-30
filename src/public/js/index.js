@@ -1,6 +1,37 @@
 // Socket comunica con servidor
 const socket = io();
 
+let user;
+let chatBox = document.getElementById('chatBox');
+let message = document.getElementById('messagelogs')
+
+Swal.fire({
+    title: 'Identifícate',
+    input: 'text',
+    text: 'Ingresa al Chat',
+    inputValidator: (value) => {
+        if (!value) {
+            return 'Necesitas escribir un nombre';
+        }
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false
+}).then((result) => {
+    if (result.isConfirmed) {
+        user = result.value;
+        socket.emit('authenticated', user);
+    }
+});
+
+chatBox.addEventListener('keyup', evt =>{
+    if(evt.key === 'Enter'){
+        if(chatBox.value.trim().length > 0){
+            socket.emit('message', { user, message: chatBox.value});
+            chatBox.value='';
+        }
+    }
+})
+
 //AGREGAR
 const agregarForm = document.getElementById('agregarForm');
 
@@ -76,3 +107,18 @@ socket.on('showCarts', data => {
         `
     })
 })
+
+socket.on('showChats', data => {
+    let messages = '';
+
+    data.forEach(message => {
+        messages += `${message.user} dice: ${message.message}`
+    });
+    messagesLog.innerHTML = messages; 
+
+})
+
+
+
+
+

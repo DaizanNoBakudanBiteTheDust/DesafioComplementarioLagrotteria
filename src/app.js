@@ -78,6 +78,7 @@ const io = new Server(server)
 
 app.set('socketio', io);
 
+const chatText = [];
 
 io.on('connection', socket => {
 
@@ -101,9 +102,9 @@ io.on('connection', socket => {
                 io.emit('showCarts', await cartManager.getAll());
             });
 
-        socket.on('agregarMessage', async data => {
-                await prodManager.save(data);
-                io.emit('showMessage', await chatManager.getAll());
+        socket.on('message', async data => {
+                await chatManager.save(data);
+                io.emit('showChats', await chatManager.getAll);
         });    
 
 

@@ -9,13 +9,13 @@ const router = Router();
 //read
 
 router.get('/', async (req, res) => {
-    const messages = await manager.getAll();
-    res.send({
-            messages
-    })
+    res.render('home', {  messages: await  manager.getAll() });
 });
 
 router.post('/', async (req, res) => {
+
+    const io = req.app.get('socketio');
+
     try {
         const { user, message } = req.body;
 
@@ -27,6 +27,8 @@ router.post('/', async (req, res) => {
             user,
             message
         });
+
+        io.emit('showChats', result);
 
         res.status(201).send({ status: 'success', payload: result });
     } catch (error) {

@@ -1,19 +1,24 @@
+<h1>Escribe tu mensaje</h1>
+<input id="chatBox" name="chatBox" required>
+
 
 <div style="display:flex; gap: 5rem;">
   <div>
 
-    <h1 id="ola">carrito agregado</h1>
+    <h1 id="ola">Chat</h1>
     <div id="container">
       <div>
-    {{#each carts}}
+    {{#each chat}}
     <ul>
-        <li>user: {{this._id}}</li>
-        <li>message: ${{this.products}}</li>
+        {{this.user}} 
+        <li>message: {{this.message}}</li>
     </ul>
     {{/each}}
     </div>
     </div>
   </div>
 </div>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>
