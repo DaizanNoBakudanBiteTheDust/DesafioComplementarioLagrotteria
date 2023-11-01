@@ -104,7 +104,7 @@ io.on('connection', socket => {
 
         socket.on('message', async data => {
                 await chatManager.save(data);
-                io.emit('showChats', await chatManager.getAll);
+                io.emit('showChats', await chatManager.getAll());
         });    
 
 
