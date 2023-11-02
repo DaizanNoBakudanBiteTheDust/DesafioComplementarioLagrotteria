@@ -42,6 +42,12 @@ app.use(express.urlencoded({
         extended: true
 }));
 
+// handlebars
+
+app.engine('handlebars', handlebars.engine());
+app.set('views', `${__dirname}/views`)
+app.set('view engine', 'handlebars');
+
 
 // Conexion DB
 try {
@@ -51,11 +57,7 @@ try {
 } catch (error) {
         console.log("conexion fallida")
 }
-// handlebars
 
-app.engine('handlebars', handlebars.engine());
-app.set('views', `${__dirname}/views`)
-app.set('view engine', 'handlebars');
 
 // Ruta view
 app.use('/', viewsRouter);

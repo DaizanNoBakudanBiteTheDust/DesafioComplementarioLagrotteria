@@ -6,10 +6,17 @@
     <div id="container">
       <div>
     {{#each carts}}
-    <ul>
-        <li>id: {{this._id}}</li>
-        <li>productos: ${{this.products}}</li>
-    </ul>
+   <ul>
+          <li>Carrito ID: {{this._id}}</li>
+          <li>Productos:
+            <ul>
+              {{#each this.products}}
+              <li>Producto ID: {{this.id}}</li>
+              <li>Cantidad: {{this.quantity}}</li>
+              {{/each}}
+            </ul>
+          </li>
+        </ul>
     {{/each}}
     </div>
     </div>

@@ -17,28 +17,40 @@ const router = Router();
 // traer todos los productos
 
 router.get('/', async (req, res) => {
-
+try{
         const cart = await manager.getAll();
         res.send({
-                cart
+          status:'success', payload:  cart
         })
+}catch(error){
+        res.status(500).send({ status: 'error', message: error.message });
 
+}
 });
 
 
 router.get('/:cid', async (req, res) => {
-        const {cid} = req.params;
+        try {
+                const {cid} = req.params;
 
          //carrito por ID
 
          const cart = await manager.getProductById(cid);
      
-       res.send(cart);
+         res.send({
+                status:'success', payload:  cart
+              })
+        } catch(error){
+                res.status(500).send({ status: 'error', message: error.message });
+        
+        }
+        
 });
 
 //postea carrito
 
 router.post('/', async (req, res) => {
+      try {
         const carts = await manager.getAll();
         // Productos que haremos con Postman
         const cart = req.body;
@@ -62,6 +74,11 @@ router.post('/', async (req, res) => {
                 message: 'product created',
                 cart
         })
+              
+      } catch (error) {
+        res.status(500).send({ status: 'error', message: error.message });
+      }
+        
 });
 
 
@@ -70,58 +87,60 @@ router.post('/', async (req, res) => {
 
 
 router.post('/:cid/products/:pid', async (req, res) => {
-
-        // utilizo params de carrito y producto
-        const {cid} = req.params;
-        const pid = parseInt(req.params.pid); // Convierte pid a número
-
-        //carrito por ID
-
-        const cart = await manager.getProductById(cid);
-
-        if (!cart) {
-                return res.status(404).json({
-                        error: 'Carrito no encontrado'
-                });
+try {
+            // utilizo params de carrito y producto
+            const {cid} = req.params;
+            const {pid} = req.params; // Convierte pid a número
+    
+            //carrito por ID
+    
+            const cart = await manager.getProductById(cid);
+    
+            if (!cart) {
+                    return res.status(404).json({
+                            error: 'Carrito no encontrado'
+                    });
+            }
+    
+            // Verifica si el carro está vacío
+        if (!cart.products || cart.products.length === 0) {
+            cart.products = []; // Inicializa cart.products como un arreglo vacío
         }
-
-        // Verifica si el carro está vacío
-    if (!cart.products || cart.products.length === 0) {
-        cart.products = []; // Inicializa cart.products como un arreglo vacío
-    }
-
-    const lastProductId = cart.products.length > 0 ? cart.products[cart.products.length - 1].id : 0;
-    const newProductId = lastProductId + 1;
-
+    
+        // Buscar el producto en el carrito por el ID proporcionado
     const existingProduct = cart.products.find(product => product.id === pid);
 
-        if (existingProduct) {
-                // Si el producto ya existe, incrementa la cantidad
-               existingProduct.quantity += 1;
-        } else {
-
-        // Crea el objeto del producto con el nuevo ID y cantidad inicial de 1
-        const addedProduct = {
-                id: newProductId, // Establece el ID del producto
-                quantity: 1
-            };
-
-        // Agrega el producto al arreglo "products" del carrito
-        cart.products.push(addedProduct);
+    if (existingProduct) {
+      // Si el producto ya existe, incrementa la cantidad
+      existingProduct.quantity += 1;
+    } else {
+      // Crear el objeto del producto utilizando el ID proporcionado
+      const addedProduct = {
+        id: pid, // Utiliza el ID proporcionado
+        quantity: 1
+      };
+    
+            // Agrega el producto al arreglo "products" del carrito
+            cart.products.push(addedProduct);
+            
+             }
+    
+            // Actualiza el carrito con los cambios
+            await manager.update(cid, cart);
+    
+            await manager.save(cart);
+    
+            // status success
+            return res.send({
+                    status: 'success',
+                    message: 'product added',
+                    cart
+            })
         
-         }
-
-        // Actualiza el carrito con los cambios
-        await manager.update(cid, cart);
-
-        await manager.save(cart);
-
-        // status success
-        return res.json({
-                status: 'success',
-                message: 'product added',
-                cart
-        })
+} catch (error) {
+        res.status(500).send({ status: 'error', message: error.message });
+      }
+    
 
 });
 
