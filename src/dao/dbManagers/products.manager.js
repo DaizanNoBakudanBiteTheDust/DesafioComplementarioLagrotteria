@@ -34,5 +34,16 @@ export default class Products {
         const result = await productsModel.deleteOne({_id : id}, product);
         return result;
     }
+    getProductById = async (id) => {
 
+        const product = await productsModel.findOne({ _id: id}).lean();
+        
+        if (!product) {
+            throw new Error('Producto no encontrado');
+
+        } 
+        return product;
+
+
+    }
 }
