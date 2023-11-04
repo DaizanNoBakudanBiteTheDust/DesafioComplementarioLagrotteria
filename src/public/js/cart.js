@@ -39,7 +39,7 @@ socket.on('showCarts', data => {
         container.innerHTML += '<ul>';
         cart.products.forEach(product => {
             container.innerHTML += `
-                <li>Product ID: ${product.id}</li>
+                <li>Product ID: ${product._id}</li>
                 <li>Quantity: ${product.quantity}</li>
             `;
         });

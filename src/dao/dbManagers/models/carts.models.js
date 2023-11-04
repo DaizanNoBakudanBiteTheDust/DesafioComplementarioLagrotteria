@@ -16,7 +16,7 @@ const cartsSchema = new mongoose.Schema({
 
                 ref: "products"
 
-                //Esto significa que le pasaremos el ID, es decir el ObjectId del curso, como se llama la referencia? En este caso es “products”
+                //Esto significa qu e le pasaremos el ID, es decir el ObjectId del curso, como se llama la referencia? En este caso es “products”
 
             },
 
